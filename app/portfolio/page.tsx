@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Portfolio",
   description:
     "Explore selected projects by BOJ Technologies — software, websites, mobile applications, graphic design, networking and digital marketing work.",
+  alternates: { canonical: "/portfolio" },
 };
 
 export default function PortfolioPage() {

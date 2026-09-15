@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Terms & Conditions",
   description:
     "The terms and conditions governing the use of the BOJ Technologies Limited website and services.",
+  alternates: { canonical: "/terms" },
 };
 
 const sections: LegalBlock[] = [

@@ -20,7 +20,6 @@ const accentDot: Record<Solution["accent"], string> = {
 
 const statusStyles: Record<Solution["status"], string> = {
   Available: "bg-accent-50 text-accent-700 ring-accent-100",
-  "In Development": "bg-amber-50 text-amber-700 ring-amber-100",
   "Coming Soon": "bg-ink-100 text-ink-600 ring-ink-200",
 };
 

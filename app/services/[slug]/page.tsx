@@ -24,6 +24,7 @@ export function generateMetadata({
   return {
     title: service.name,
     description: service.shortDescription,
+    alternates: { canonical: `/services/${service.slug}` },
   };
 }
 

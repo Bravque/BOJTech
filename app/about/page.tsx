@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "BOJ Technologies Limited is an ICT company delivering innovative software, digital, networking and technology solutions across Kenya. Learn about our mission, vision and values.",
+  alternates: { canonical: "/about" },
 };
 
 const commitments = [

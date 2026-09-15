@@ -3,6 +3,7 @@ import { Inter, Sora } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { StructuredData } from "@/components/StructuredData";
 import { site } from "@/data/site";
 
 const inter = Inter({
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   keywords: [
     "BOJ Technologies",
     "software development Kenya",
-    "web development Nairobi",
+    "web development Migori",
     "mobile app development",
     "POS systems Kenya",
     "networking solutions",
@@ -66,6 +67,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${sora.variable}`}>
       <body className="min-h-screen bg-white">
+        <StructuredData />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"

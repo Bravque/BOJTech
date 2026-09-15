@@ -48,18 +48,22 @@ export function ContactInfo({ className }: { className?: string }) {
         <a href={`tel:${site.phonePrimary.replace(/\s/g, "")}`} className="block hover:text-brand-700">
           {site.phonePrimary}
         </a>
-        <a href={`tel:${site.phoneSecondary.replace(/\s/g, "")}`} className="block hover:text-brand-700">
-          {site.phoneSecondary}
-        </a>
+        {site.phoneSecondary && (
+          <a href={`tel:${site.phoneSecondary.replace(/\s/g, "")}`} className="block hover:text-brand-700">
+            {site.phoneSecondary}
+          </a>
+        )}
       </InfoCard>
 
       <InfoCard icon={Mail} title="Email">
         <a href={`mailto:${site.email}`} className="block hover:text-brand-700">
           {site.email}
         </a>
-        <a href={`mailto:${site.salesEmail}`} className="block hover:text-brand-700">
-          {site.salesEmail}
-        </a>
+        {site.salesEmail && (
+          <a href={`mailto:${site.salesEmail}`} className="block hover:text-brand-700">
+            {site.salesEmail}
+          </a>
+        )}
       </InfoCard>
 
       <InfoCard icon={MapPin} title="Physical Location">

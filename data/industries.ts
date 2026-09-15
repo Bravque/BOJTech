@@ -30,6 +30,7 @@ export const industries: Industry[] = [
     icon: Store,
     description:
       "POS, inventory and analytics that speed up checkout and give clear visibility into sales and stock.",
+    image: "/images/bansiui.png",
     imageAlt: "Modern supermarket technology and POS at checkout",
     imagePlaceholder: "Modern supermarket technology and POS",
     imageCategory: "Retail",
@@ -50,6 +51,7 @@ export const industries: Industry[] = [
     icon: Briefcase,
     description:
       "Affordable, scalable software, websites and IT support designed to help SMEs grow.",
+    image: "/images/software-dashboard.jpeg",
     imageAlt: "Small business team using modern technology",
     imagePlaceholder: "SME team working with modern technology",
     imageCategory: "SME",
@@ -60,6 +62,7 @@ export const industries: Industry[] = [
     icon: Building2,
     description:
       "Enterprise-grade software, networking and digital transformation for established organizations.",
+    image: "/images/cabling2.png",
     imageAlt: "Professional corporate office technology environment",
     imagePlaceholder: "Professional office technology",
     imageCategory: "Corporate",
@@ -70,6 +73,7 @@ export const industries: Industry[] = [
     icon: GraduationCap,
     description:
       "Digital learning tools, computer labs, campus networks and Wi-Fi for educational institutions.",
+    image: "/images/cctvnetworking.jpg",
     imageAlt: "Digital learning and computer technology in a school",
     imagePlaceholder: "Digital learning and computer technology",
     imageCategory: "Education",
@@ -80,6 +84,7 @@ export const industries: Industry[] = [
     icon: HandHeart,
     description:
       "Reliable, cost-effective technology and digital tools that help NGOs deliver greater impact.",
+    image: "/images/cabling2.png",
     imageAlt: "NGO team using technology for community programs",
     imagePlaceholder: "NGO team using technology for programs",
     imageCategory: "NGO",
@@ -90,6 +95,7 @@ export const industries: Industry[] = [
     icon: Landmark,
     description:
       "Secure systems, IT infrastructure and digital transformation for public-sector institutions.",
+    image: "/images/kuppetfrontui.png",
     imageAlt: "Government digital transformation and IT infrastructure",
     imagePlaceholder: "Digital transformation and IT infrastructure",
     imageCategory: "Government",
