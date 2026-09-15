@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with BOJ Technologies Limited. Request a quote, book a consultation or ask about our software, digital, networking and IT services.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
@@ -74,7 +75,7 @@ export default function ContactPage() {
                   <ImagePlaceholder
                     title="Our location on the map"
                     description="Interactive map of BOJ Technologies offices"
-                    alt="Map showing BOJ Technologies location in Nairobi, Kenya"
+                    alt="Map showing BOJ Technologies location at Creadex Building, Migori, Kenya"
                     category="Map"
                     icon={MapPin}
                     tone="accent"

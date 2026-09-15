@@ -2,8 +2,11 @@ import { ArrowRight, Sparkles, Wifi, ShieldCheck, Activity } from "lucide-react"
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { stats } from "@/data/site";
 
 export function Hero() {
+  const heroStats = stats.slice(0, 3);
+
   return (
     <section className="relative overflow-hidden bg-white pt-[calc(var(--header-height)+2.5rem)]">
       {/* background */}
@@ -22,7 +25,7 @@ export function Hero() {
             <div className="animate-fade-up">
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 shadow-soft ring-1 ring-inset ring-brand-100">
                 <Sparkles className="h-3.5 w-3.5 text-accent-500" />
-                Innovative ICT solutions · Nairobi, Kenya
+                Innovative ICT solutions · Migori, Kenya
               </span>
             </div>
 
@@ -60,17 +63,14 @@ export function Hero() {
               className="mt-12 grid max-w-lg grid-cols-3 gap-6 animate-fade-up"
               style={{ animationDelay: "320ms" }}
             >
-              {[
-                { value: "12+", label: "Technology services" },
-                { value: "5", label: "Product brands" },
-                { value: "9+", label: "Industries served" },
-              ].map((stat) => (
-                <div key={stat.label}>
+              {heroStats.map((stat) => (
+                <div key={stat.shortLabel}>
                   <dt className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">
                     {stat.value}
+                    {stat.suffix}
                   </dt>
                   <dd className="mt-1 text-xs leading-snug text-ink-500 sm:text-sm">
-                    {stat.label}
+                    {stat.shortLabel}
                   </dd>
                 </div>
               ))}

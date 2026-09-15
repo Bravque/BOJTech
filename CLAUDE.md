@@ -37,7 +37,8 @@ There are no tests. `npm run build` is the primary correctness gate — it type-
 
 Logo assets in `public/` (`logo-full.png`, `logo-mark.png`, `logo-mark-white.png`) and favicons (`app/icon.png`, `app/apple-icon.png`) were extracted from a raster source with Pillow (trimmed, background made transparent). `components/ui/Logo.tsx` uses the color mark on light backgrounds and the white mark when `tone="light"` (dark backgrounds). If an original vector logo becomes available, prefer swapping to SVG.
 
-## Known integration points (currently stubbed)
+## Known integration points
 
-- `components/sections/ContactForm.tsx` simulates submission client-side (fake delay + success state). Wire `handleSubmit` to an `app/api/contact/route.ts` handler, email service, or CRM to go live.
-- `data/site.ts` contains placeholder phone numbers, emails, and social URLs — update with real values.
+- **Contact form is wired.** `components/sections/ContactForm.tsx` POSTs to `app/api/contact/route.ts`, which validates input, blocks spam via a honeypot field, and delivers email through Resend's REST API. Delivery is gated on env vars (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, optional `CONTACT_TO_EMAIL` — see `.env.example`); when unset, submissions are validated and logged server-side (never silently lost) but no email is sent. To use a different provider (SMTP/CRM), replace the `deliver()` function in the route — the request/response contract is unchanged.
+- `data/site.ts` still contains **placeholder** phone numbers, emails, address and social URLs — update with real values. These feed the footer, contact page, `tel:`/`mailto:` links, JSON-LD (`components/StructuredData.tsx`) and sitemap, so replacing them there updates everything.
+- SEO: a site-wide Open Graph/Twitter image is generated at `app/opengraph-image.tsx`; Organization/LocalBusiness JSON-LD lives in `components/StructuredData.tsx` (mounted in `app/layout.tsx`); every page sets `alternates.canonical`.

@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Industries We Serve",
   description:
     "BOJ Technologies delivers technology solutions for retail, hospitality, SMEs, corporates, education, NGOs, government, healthcare and startups across Kenya.",
+  alternates: { canonical: "/industries" },
 };
 
 export default function IndustriesPage() {

@@ -23,13 +23,13 @@ export const site = {
     "BOJ Technologies Limited delivers innovative software, digital, networking and technology solutions for modern businesses.",
   longDescription:
     "BOJ Technologies Limited is an Information and Communication Technology company providing innovative digital, software, hardware, networking and technology solutions to businesses, organizations, institutions and individuals.",
-  url: "https://www.bojtechnologies.co.ke",
-  email: "info@bojtechnologies.co.ke",
-  salesEmail: "sales@bojtechnologies.co.ke",
-  phonePrimary: "+254 700 000 000",
-  phoneSecondary: "+254 720 000 000",
-  location: "Nairobi, Kenya",
-  addressLines: ["Business District", "Nairobi, Kenya"],
+  url: "https://bojtechnologies.com",
+  email: "info@bojtechnologies.com",
+  salesEmail: "inforbrav@gmail.com",
+  phonePrimary: "+254 798 942 939",
+  phoneSecondary: "",
+  location: "Migori, Kenya",
+  addressLines: ["Creadex Building", "P.O. Box 8-40400", "Migori, Kenya"],
   hours: [
     { days: "Monday – Friday", time: "8:00 AM – 6:00 PM" },
     { days: "Saturday", time: "9:00 AM – 2:00 PM" },
@@ -172,8 +172,8 @@ export const whyChoose: WhyChoose[] = [
 ];
 
 export const stats = [
-  { value: "12", suffix: "+", label: "Technology services under one roof" },
-  { value: "5", suffix: "", label: "Specialist product brands" },
-  { value: "9", suffix: "+", label: "Industries served across Kenya" },
-  { value: "100", suffix: "%", label: "Commitment to client success" },
+  { value: "12", suffix: "+", label: "Technology services under one roof", shortLabel: "Technology services" },
+  { value: "5", suffix: "", label: "Specialist product brands", shortLabel: "Product brands" },
+  { value: "9", suffix: "+", label: "Industries served across Kenya", shortLabel: "Industries served" },
+  { value: "100", suffix: "%", label: "Commitment to client success", shortLabel: "Client commitment" },
 ];

@@ -25,6 +25,7 @@ export function generateMetadata({
   return {
     title: project.name,
     description: project.description,
+    alternates: { canonical: `/portfolio/${project.slug}` },
   };
 }
 

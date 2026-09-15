@@ -9,7 +9,7 @@ export type Solution = {
   icon: LucideIcon;
   description: string;
   highlights: string[];
-  status: "Available" | "In Development" | "Coming Soon";
+  status: "Available" | "Coming Soon";
   accent: "brand" | "accent" | "violet" | "amber";
   // Image / mockup fields — replace with real product screenshots later.
   image?: string;

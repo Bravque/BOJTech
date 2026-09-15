@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -13,6 +14,10 @@ import { BrandsStrip } from "@/components/sections/home/BrandsStrip";
 import { IndustriesSection } from "@/components/sections/IndustriesSection";
 import { ContactInfo } from "@/components/sections/ContactInfo";
 import { CTASection } from "@/components/sections/CTASection";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (

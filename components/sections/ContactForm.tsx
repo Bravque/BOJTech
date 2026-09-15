@@ -5,7 +5,7 @@ import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
 
-type Status = "idle" | "submitting" | "success";
+type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldBase =
   "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-100";
@@ -14,19 +14,48 @@ const labelBase = "mb-1.5 block text-sm font-medium text-ink-700";
 
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setStatus("submitting");
-    // Placeholder submission. Wire this to an API route, email service or CRM later.
-    await new Promise((resolve) => setTimeout(resolve, 1100));
-    setStatus("success");
-    (e.target as HTMLFormElement).reset();
+    setError(null);
+
+    try {
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        throw new Error(body?.error ?? "Something went wrong. Please try again.");
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (err) {
+      setStatus("error");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "We couldn't send your message. Please try again or email us directly."
+      );
+    }
   }
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center justify-center rounded-3xl border border-accent-100 bg-accent-50/60 p-10 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex flex-col items-center justify-center rounded-3xl border border-accent-100 bg-accent-50/60 p-10 text-center"
+      >
         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-500 text-white">
           <CheckCircle2 className="h-8 w-8" />
         </span>
@@ -52,6 +81,18 @@ export function ContactForm() {
       onSubmit={handleSubmit}
       className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-8"
     >
+      {/* Honeypot — hidden from humans; bots that fill it are silently dropped. */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="company_website">Company website</label>
+        <input
+          id="company_website"
+          name="company_website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={labelBase}>
@@ -155,6 +196,16 @@ export function ContactForm() {
           </>
         )}
       </button>
+
+      {status === "error" && error && (
+        <p
+          role="alert"
+          className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-100"
+        >
+          {error}
+        </p>
+      )}
+
       <p className="mt-4 text-xs text-ink-400">
         By submitting this form you agree to our{" "}
         <a href="/privacy-policy" className="underline hover:text-ink-600">

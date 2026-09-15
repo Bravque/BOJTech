@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Services",
   description:
     "Explore BOJ Technologies' full range of services — software development, web and mobile apps, POS systems, design, digital marketing, hardware, networking, connectivity, IT consultancy and support.",
+  alternates: { canonical: "/services" },
 };
 
 const processSteps = [

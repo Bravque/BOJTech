@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Solutions",
   description:
     "Discover BOJ Technologies' products and solutions — BOJ POS, BOJ Software Solutions, BOJ Digital, BOJ Creative, WiFi Chap Chap and more.",
+  alternates: { canonical: "/solutions" },
 };
 
 const futureReady = [

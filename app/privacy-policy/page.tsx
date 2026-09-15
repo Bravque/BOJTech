@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How BOJ Technologies Limited collects, uses and protects your personal information.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 const sections: LegalBlock[] = [
