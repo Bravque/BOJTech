@@ -1,0 +1,148 @@
+// BOJ Technologies — content + auth database.
+// Content mirrors the shapes that used to live in data/*.ts. Flat string
+// arrays (features/outcomes/highlights/tags) and structured lists are stored
+// as JSON; icons are stored as registry name strings (see lib/icons.ts).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id               Int      @id @default(autoincrement())
+  slug             String   @unique
+  name             String
+  shortName        String
+  tagline          String   @db.Text
+  icon             String
+  shortDescription String   @db.Text
+  overview         String   @db.Text
+  features         Json
+  outcomes         Json
+  image            String?
+  imageAlt         String   @db.Text
+  imagePlaceholder String   @db.Text
+  imageCategory    String
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Solution {
+  id               Int      @id @default(autoincrement())
+  slug             String   @unique
+  name             String
+  category         String
+  tagline          String   @db.Text
+  icon             String
+  description      String   @db.Text
+  highlights       Json
+  status           String   @default("Available") // "Available" | "Coming Soon"
+  accent           String   @default("brand") // brand | accent | violet | amber
+  image            String?
+  imageAlt         String   @db.Text
+  imagePlaceholder String   @db.Text
+  imageCategory    String
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  slug             String   @unique
+  name             String
+  category         String
+  client           String
+  year             String
+  description      String   @db.Text
+  tags             Json
+  image            String?
+  imageAlt         String   @db.Text
+  imagePlaceholder String   @db.Text
+  imageCategory    String
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Industry {
+  id               Int      @id @default(autoincrement())
+  slug             String   @unique
+  name             String
+  icon             String
+  description      String   @db.Text
+  image            String?
+  imageAlt         String   @db.Text
+  imagePlaceholder String   @db.Text
+  imageCategory    String
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model CoreValue {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WhyChoose {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Stat {
+  id         Int      @id @default(autoincrement())
+  value      String
+  suffix     String   @default("")
+  label      String
+  shortLabel String
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Single-row table (id = 1) holding company/contact details.
+model SiteSetting {
+  id              Int      @id @default(1)
+  name            String
+  shortName       String
+  legalName       String
+  tagline         String   @db.Text
+  description     String   @db.Text
+  longDescription String   @db.Text
+  url             String
+  email           String
+  salesEmail      String   @default("")
+  phonePrimary    String
+  phoneSecondary  String   @default("")
+  location        String
+  addressLines    Json // string[]
+  hours           Json // { days: string; time: string }[]
+  socials         Json // { label: string; href: string; icon: string }[]
+  updatedAt       DateTime @updatedAt
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("EDITOR") // ADMIN | EDITOR
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

@@ -4,9 +4,10 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { ServiceCard } from "@/components/cards/ServiceCard";
-import { services } from "@/data/services";
+import { getServices } from "@/lib/content";
 
-export function ServicesOverview() {
+export async function ServicesOverview() {
+  const services = await getServices();
   const featured = services.slice(0, 6);
   return (
     <section className="relative bg-ink-50/60 py-20 sm:py-24">

@@ -2,15 +2,16 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { FeatureCard } from "@/components/cards/FeatureCard";
-import { whyChoose } from "@/data/site";
+import { getWhyChoose } from "@/lib/content";
 
-export function WhyChooseSection({
+export async function WhyChooseSection({
   tone = "light",
   limit,
 }: {
   tone?: "light" | "dark";
   limit?: number;
 }) {
+  const whyChoose = await getWhyChoose();
   const items = limit ? whyChoose.slice(0, limit) : whyChoose;
   const isDark = tone === "dark";
 

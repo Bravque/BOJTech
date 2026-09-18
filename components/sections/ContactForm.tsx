@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
-import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+export type ContactFormService = { slug: string; name: string };
 
 const fieldBase =
   "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-100";
 
 const labelBase = "mb-1.5 block text-sm font-medium text-ink-700";
 
-export function ContactForm() {
+export function ContactForm({ services = [] }: { services?: ContactFormService[] }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
 

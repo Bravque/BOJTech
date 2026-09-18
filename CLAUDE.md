@@ -4,24 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Corporate marketing website for **BOJ Technologies Limited** (a Kenyan ICT company). Next.js 14 App Router + TypeScript + Tailwind CSS + lucide-react. There is no backend, database, or test suite — it is a statically-generated content site.
+Corporate marketing website for **BOJ Technologies Limited** (a Kenyan ICT company). Next.js 14 App Router + TypeScript + Tailwind CSS + lucide-react. Content is stored in a **MySQL database** (via Prisma) and managed through a login-protected **admin dashboard** at `/admin`. There is no automated test suite. Runs as a Node.js server (deploys to Hostinger Business — see `DEPLOYMENT.md`).
 
 ## Commands
 
 ```bash
-npm run dev      # dev server, http://localhost:3000
-npm run build    # production build (also runs type-check + lint; use this to verify changes)
-npm run start    # serve the production build (PORT=3100 npm run start to change port)
-npm run lint     # next lint only
+npm run dev            # dev server, http://localhost:3000
+npm run build          # runs prisma generate + next build (type-check + lint; primary gate)
+npm run start          # serve the production build (PORT=3100 npm run start to change port)
+npm run lint           # next lint only
+npx prisma migrate deploy   # apply DB schema (prisma/migrations)
+npm run db:seed        # load current content into the DB (idempotent; from data/*.ts)
+npm run create-admin -- "Name" email pass ADMIN   # create/reset a login
 ```
 
-There are no tests. `npm run build` is the primary correctness gate — it type-checks all routes and fails on TS or lint errors.
+There are no tests. `npm run build` is the primary correctness gate — it type-checks all routes and fails on TS or lint errors. It does **not** need a database (content pages are dynamic and only query MySQL at request time). See `DEPLOYMENT.md` for full setup.
 
 ## Architecture
 
-**Content lives in `data/`, not in components.** This is the most important pattern. `data/site.ts` (company info, nav, socials, core values, why-choose, stats), `data/services.ts`, `data/solutions.ts`, `data/portfolio.ts`, and `data/industries.ts` are plain typed arrays that drive the entire site. Adding a service, solution, or project = adding one object to the relevant array; pages, grids, the footer, and `app/sitemap.ts` all read from these arrays and update automatically. Each data file exports a `getX(slug)` helper used by dynamic routes. Icons are stored **as `LucideIcon` component references** directly in the data objects (imported from `lucide-react`), not as strings — except `data/site.ts` `socials`, which uses string keys mapped to icons inside `Footer.tsx` / `ContactInfo.tsx`.
+**Content lives in MySQL; the app reads it through `lib/content.ts`.** The read layer exposes async getters (`getServices`, `getService(slug)`, `getSolutions`, `getProjects`, `getIndustries`, `getCoreValues`, `getWhyChoose`, `getStats`, `getSiteSettings`) that return objects shaped exactly like the old `data/*.ts` types — with the stored icon **name string** resolved back to a `LucideIcon` component via `lib/icons.ts`. So server components/cards render unchanged; they just `await` a getter instead of importing an array. `lib/db.ts` is the Prisma client singleton. `data/*.ts` is retained as: (a) the **seed source** (`prisma/seed.ts`), (b) shared **type** definitions imported by components, and (c) the static route-bound `mainNav`/`footerNav` used by `Navbar`/`Footer`.
 
-**Dynamic routes are generated from data.** `app/services/[slug]/page.tsx` and `app/portfolio/[slug]/page.tsx` use `generateStaticParams()` + `generateMetadata()` sourced from the data arrays. All routes are static/SSG.
+**Icons are stored as registry name strings.** `lib/icons.ts` maps names → `LucideIcon` components (`iconRegistry`, `resolveIcon`, `isIconName`, `iconNames`). The DB stores the name; the read layer resolves it; the admin **icon picker** offers these choices. Add a new icon there to make it available. `socials` still use string keys mapped to icons inside `Footer.tsx` / `ContactInfo.tsx`.
+
+**All content routes are dynamic (`export const dynamic = "force-dynamic"`)**, set once in the root `app/layout.tsx` and cascading to every route, so DB edits appear instantly. `app/services/[slug]` and `app/portfolio/[slug]` use async `generateMetadata()` and read the DB per request (no `generateStaticParams`). Server actions call `revalidatePath()` on save as belt-and-suspenders.
+
+**Route groups.** `app/(site)/` holds the public marketing pages and its `layout.tsx` renders the public chrome (Navbar/Footer/StructuredData). `app/admin/` is the dashboard: `app/admin/login` (public login), `app/admin/(dashboard)/` (guarded by `middleware.ts` + a session recheck in its layout, with the sidebar chrome). The root `app/layout.tsx` is a bare html/body shell + global metadata.
+
+**Admin dashboard (`app/admin`).** Auth is NextAuth v4 Credentials + JWT (`lib/auth.ts`, `middleware.ts` protects `/admin/*`, users in the `User` table with bcrypt hashes). CRUD for every content type lives under `app/admin/(dashboard)/<type>/` (list + `new` + `[id]` edit). Mutations are **server actions** in `app/admin/_actions/*` (zod-validated, `revalidatePath`). Reusable form primitives (TextInput, TextArea, SelectInput, ListEditor, IconPicker, ImageField, SubmitButton) are in `app/admin/_components/fields.tsx`; per-entity forms in `app/admin/_components/forms/`. Image uploads POST to `app/api/admin/upload/route.ts` (writes to `public/uploads`). Fixed taxonomies live in `types/content.ts`.
 
 **Image strategy — `components/ui/ImagePlaceholder.tsx`.** Every visual on the site goes through this one component. When its `src` prop is undefined it renders a styled, labelled placeholder (gradient + grid pattern + icon + category chip); when `src` is set it renders an optimized `next/image` with the identical layout. Data objects carry `image` / `imageAlt` / `imagePlaceholder` / `imageCategory` fields precisely so real assets can be dropped in later by setting `image` — no layout changes. Remote image hosts must be added to `images.remotePatterns` in `next.config.mjs`.
 
@@ -29,7 +38,7 @@ There are no tests. `npm run build` is the primary correctness gate — it type-
 
 **Animation is CSS + IntersectionObserver, not a library.** `components/ui/Reveal.tsx` is the only animation primitive: a `"use client"` wrapper that adds `.is-visible` when scrolled into view. Wrap content in `<Reveal delay={n}>` for scroll-in effects; the hero uses `animate-fade-up` keyframes (defined in the Tailwind config) for above-the-fold load animation instead. All motion respects `prefers-reduced-motion` (handled in `globals.css`). Do not add framer-motion or similar.
 
-**Component layers.** `components/ui/` = primitives (Button, Container, Logo, Eyebrow, SectionHeader, Reveal, ImagePlaceholder). `components/cards/` = data-bound cards (ServiceCard, SolutionCard, PortfolioCard, IndustryCard, FeatureCard). `components/sections/` = page sections, several reusable across pages (`PageHero`, `CTASection`, `WhyChooseSection`, `IndustriesSection`, `ContactInfo`, `LegalLayout`); home-only sections live in `components/sections/home/`. Most components are server components; only `Navbar`, `Reveal`, `ContactForm`, and `PortfolioGrid` are `"use client"`. `Navbar` and `Footer` are mounted once in `app/layout.tsx`.
+**Component layers.** `components/ui/` = primitives (Button, Container, Logo, Eyebrow, SectionHeader, Reveal, ImagePlaceholder). `components/cards/` = data-bound cards (ServiceCard, SolutionCard, PortfolioCard, IndustryCard, FeatureCard). `components/sections/` = page sections, several reusable across pages (`PageHero`, `CTASection`, `WhyChooseSection`, `IndustriesSection`, `ContactInfo`, `LegalLayout`); home-only sections live in `components/sections/home/`. Most are server components; several sections that read content (`Footer`, `CTASection`, `ContactInfo`, `WhyChooseSection`, `IndustriesSection`, `StructuredData`, and the home sections) are now **async** and `await` `lib/content.ts`. Client components are `Navbar`, `Reveal`, `ContactForm`, `PortfolioGrid` — client components cannot call the (async, server-only) read layer, so they receive data as **props** from a server parent (`ContactForm` gets a `services` list, `PortfolioGrid` gets `projects`); `Navbar` uses the static `mainNav` from `data/site.ts`. `Navbar`/`Footer`/`StructuredData` are mounted in `app/(site)/layout.tsx`.
 
 **Button polymorphism.** `components/ui/Button.tsx` renders `next/link` for internal `href` (starting with `/`), a plain `<a>` for external, or `<button>` when no `href`. Use its `variant`/`size` props rather than restyling.
 
@@ -40,5 +49,6 @@ Logo assets in `public/` (`logo-full.png`, `logo-mark.png`, `logo-mark-white.png
 ## Known integration points
 
 - **Contact form is wired.** `components/sections/ContactForm.tsx` POSTs to `app/api/contact/route.ts`, which validates input, blocks spam via a honeypot field, and delivers email through Resend's REST API. Delivery is gated on env vars (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, optional `CONTACT_TO_EMAIL` — see `.env.example`); when unset, submissions are validated and logged server-side (never silently lost) but no email is sent. To use a different provider (SMTP/CRM), replace the `deliver()` function in the route — the request/response contract is unchanged.
-- `data/site.ts` still contains **placeholder** phone numbers, emails, address and social URLs — update with real values. These feed the footer, contact page, `tel:`/`mailto:` links, JSON-LD (`components/StructuredData.tsx`) and sitemap, so replacing them there updates everything.
-- SEO: a site-wide Open Graph/Twitter image is generated at `app/opengraph-image.tsx`; Organization/LocalBusiness JSON-LD lives in `components/StructuredData.tsx` (mounted in `app/layout.tsx`); every page sets `alternates.canonical`.
+- **Company/contact details live in the DB** (`SiteSetting`, one row) and are edited at **/admin/settings** — they feed the footer, contact page, `tel:`/`mailto:` links, JSON-LD (`components/StructuredData.tsx`) and sitemap. The initial values are seeded from `data/site.ts`; `getSiteSettings()` falls back to `data/site.ts` if the row is missing so the site never crashes pre-seed.
+- SEO: a site-wide Open Graph/Twitter image is generated at `app/opengraph-image.tsx`; Organization/LocalBusiness JSON-LD lives in `components/StructuredData.tsx` (mounted in `app/(site)/layout.tsx`); every page sets `alternates.canonical`.
+- **Deployment**: see `DEPLOYMENT.md` (Hostinger Business Node.js app + MySQL; env vars `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`).

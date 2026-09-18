@@ -1,11 +1,12 @@
-import { site, socials } from "@/data/site";
+import { getSiteSettings } from "@/lib/content";
 
 /**
  * Organization + LocalBusiness + WebSite JSON-LD for SEO / rich results.
- * All values are sourced from data/site.ts, so updating real contact details
- * there keeps this structured data correct automatically.
+ * All values are sourced from the site settings in the database, so updating
+ * contact details in the admin dashboard keeps this structured data correct.
  */
-export function StructuredData() {
+export async function StructuredData() {
+  const site = await getSiteSettings();
   const logo = `${site.url}/logo-full.png`;
 
   const jsonLd = {
@@ -21,7 +22,7 @@ export function StructuredData() {
         description: site.longDescription,
         email: site.email,
         telephone: site.phonePrimary,
-        sameAs: socials.map((s) => s.href),
+        sameAs: site.socials.map((s) => s.href),
       },
       {
         "@type": ["LocalBusiness", "ProfessionalService"],

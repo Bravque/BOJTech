@@ -9,7 +9,7 @@ import {
   Instagram,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { site, socials } from "@/data/site";
+import { getSiteSettings } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 const socialIcons: Record<string, LucideIcon> = {
@@ -41,7 +41,9 @@ function InfoCard({
   );
 }
 
-export function ContactInfo({ className }: { className?: string }) {
+export async function ContactInfo({ className }: { className?: string }) {
+  const site = await getSiteSettings();
+  const socials = site.socials;
   return (
     <div className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2", className)}>
       <InfoCard icon={Phone} title="Phone">

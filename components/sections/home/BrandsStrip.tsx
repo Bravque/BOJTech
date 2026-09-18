@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-import { solutions } from "@/data/solutions";
+import { getSolutions } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 const accentBg: Record<string, string> = {
@@ -14,7 +14,8 @@ const accentBg: Record<string, string> = {
   amber: "from-amber-500 to-orange-600",
 };
 
-export function BrandsStrip() {
+export async function BrandsStrip() {
+  const solutions = await getSolutions();
   return (
     <section className="bg-ink-50/60 py-20 sm:py-24">
       <Container>
