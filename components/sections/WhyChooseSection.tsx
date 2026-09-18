@@ -35,7 +35,7 @@ export async function WhyChooseSection({
       <Container className="relative">
         <SectionHeader
           eyebrow="Why choose BOJ"
-          tone={tone}
+          tone={isDark ? "light" : "dark"}
           title="Built on trust, engineered for results"
           description="We pair modern technology with a genuine partnership approach — so every solution is reliable, scalable and focused on the outcomes that matter to you."
         />
