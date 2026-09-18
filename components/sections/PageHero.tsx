@@ -58,7 +58,7 @@ export function PageHero({
             <Eyebrow tone="light">{eyebrow}</Eyebrow>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="mt-5 text-4xl font-bold leading-[1.08] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 text-4xl font-bold leading-[1.08] text-white sm:text-5xl lg:text-6xl">
               {title}
             </h1>
           </Reveal>
