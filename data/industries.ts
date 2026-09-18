@@ -41,6 +41,7 @@ export const industries: Industry[] = [
     icon: UtensilsCrossed,
     description:
       "Digital ordering, POS and management systems tailored for restaurants, cafés and hospitality.",
+    image: "/images/hotelpos.jpg",
     imageAlt: "Restaurant using digital ordering technology",
     imagePlaceholder: "Restaurant using digital ordering technology",
     imageCategory: "Hospitality",
@@ -84,7 +85,7 @@ export const industries: Industry[] = [
     icon: HandHeart,
     description:
       "Reliable, cost-effective technology and digital tools that help NGOs deliver greater impact.",
-    image: "/images/cabling2.png",
+    image: "/images/ngo.jpg",
     imageAlt: "NGO team using technology for community programs",
     imagePlaceholder: "NGO team using technology for programs",
     imageCategory: "NGO",
@@ -106,6 +107,7 @@ export const industries: Industry[] = [
     icon: HeartPulse,
     description:
       "Technology solutions that streamline operations and support better patient care.",
+    image: "/images/hospital.jpg",
     imageAlt: "Healthcare technology in a modern facility",
     imagePlaceholder: "Healthcare technology",
     imageCategory: "Healthcare",
@@ -116,6 +118,7 @@ export const industries: Industry[] = [
     icon: Rocket,
     description:
       "Fast, scalable MVPs, branding and digital foundations to help startups launch and grow.",
+    image: "/images/printing.jpg",
     imageAlt: "Young entrepreneurs working with technology in a startup",
     imagePlaceholder: "Young entrepreneurs working with technology",
     imageCategory: "Startups",

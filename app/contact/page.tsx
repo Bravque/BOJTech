@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PageHero } from "@/components/sections/PageHero";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactInfo } from "@/components/sections/ContactInfo";
@@ -72,15 +70,14 @@ export default function ContactPage() {
               </Reveal>
               <Reveal delay={240}>
                 <div className="mt-6 overflow-hidden rounded-3xl ring-1 ring-ink-100">
-                  <ImagePlaceholder
-                    title="Our location on the map"
-                    description="Interactive map of BOJ Technologies offices"
-                    alt="Map showing BOJ Technologies location at Creadex Building, Migori, Kenya"
-                    category="Map"
-                    icon={MapPin}
-                    tone="accent"
-                    aspectRatio="16/9"
-                    rounded="rounded-3xl"
+                  <iframe
+                    title="BOJ Technologies location in Migori, Kenya"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249.32076767074645!2d34.47406425227087!3d-1.0625301354410093!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19d355dab57bf6a9%3A0x5e8ecd3d0f2d9dad!2sNational%20Employment%20Authority%20-%20Mogori%20County%20Office!5e0!3m2!1sen!2ske!4v1789504606698!5m2!1sen!2ske"
+                    className="block aspect-[16/9] w-full"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
                   />
                 </div>
               </Reveal>
