@@ -2,9 +2,10 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Reveal } from "@/components/ui/Reveal";
 import { IndustryCard } from "@/components/cards/IndustryCard";
-import { industries } from "@/data/industries";
+import { getIndustries } from "@/lib/content";
 
-export function IndustriesSection({ limit }: { limit?: number }) {
+export async function IndustriesSection({ limit }: { limit?: number }) {
+  const industries = await getIndustries();
   const items = limit ? industries.slice(0, limit) : industries;
   return (
     <section className="bg-white py-20 sm:py-24">

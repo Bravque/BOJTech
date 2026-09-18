@@ -1,9 +1,14 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/data/site";
-import { services } from "@/data/services";
-import { projects } from "@/data/portfolio";
+import { getSiteSettings, getServices, getProjects } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [site, services, projects] = await Promise.all([
+    getSiteSettings(),
+    getServices(),
+    getProjects(),
+  ]);
   const base = site.url;
   const now = new Date();
 

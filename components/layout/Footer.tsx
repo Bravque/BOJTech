@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
-import { site, socials, footerNav } from "@/data/site";
-import { services } from "@/data/services";
+import { footerNav } from "@/data/site";
+import { getSiteSettings, getServices } from "@/lib/content";
 
 const socialIcons: Record<string, LucideIcon> = {
   linkedin: Linkedin,
@@ -21,8 +21,10 @@ const socialIcons: Record<string, LucideIcon> = {
   instagram: Instagram,
 };
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear();
+  const [site, services] = await Promise.all([getSiteSettings(), getServices()]);
+  const socials = site.socials;
 
   return (
     <footer className="relative overflow-hidden bg-ink-950 text-brand-100/70">

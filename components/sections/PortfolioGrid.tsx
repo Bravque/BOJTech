@@ -2,20 +2,26 @@
 
 import { useMemo, useState } from "react";
 import { PortfolioCard } from "@/components/cards/PortfolioCard";
-import { projects, projectCategories } from "@/data/portfolio";
+import type { Project } from "@/data/portfolio";
+import { PROJECT_CATEGORIES } from "@/types/content";
 import { cn } from "@/lib/utils";
 
-const filters = ["All", ...projectCategories] as const;
-
-export function PortfolioGrid() {
-  const [active, setActive] = useState<(typeof filters)[number]>("All");
+export function PortfolioGrid({
+  projects,
+  categories = [...PROJECT_CATEGORIES],
+}: {
+  projects: Project[];
+  categories?: string[];
+}) {
+  const filters = ["All", ...categories];
+  const [active, setActive] = useState<string>("All");
 
   const filtered = useMemo(
     () =>
       active === "All"
         ? projects
         : projects.filter((p) => p.category === active),
-    [active]
+    [active, projects]
   );
 
   return (

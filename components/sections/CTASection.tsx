@@ -2,9 +2,9 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { site } from "@/data/site";
+import { getSiteSettings } from "@/lib/content";
 
-export function CTASection({
+export async function CTASection({
   eyebrow = "Let's work together",
   title = "Let's Build Something Great",
   description = "Whether you need custom software, a modern website, reliable connectivity or a full digital transformation, our team is ready to help you plan, build and grow.",
@@ -13,6 +13,7 @@ export function CTASection({
   title?: string;
   description?: string;
 }) {
+  const site = await getSiteSettings();
   return (
     <section className="relative py-20 sm:py-24">
       <Container>

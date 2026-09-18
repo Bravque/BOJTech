@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { site } from "@/data/site";
+import { getSiteSettings } from "@/lib/content";
 
 export const runtime = "nodejs";
 
@@ -91,9 +91,14 @@ export async function POST(req: Request) {
 async function deliver(s: Submission): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_FROM_EMAIL;
-  const to = process.env.CONTACT_TO_EMAIL ?? site.email;
 
   if (!apiKey || !from) return false;
+
+  let to = process.env.CONTACT_TO_EMAIL;
+  if (!to) {
+    const site = await getSiteSettings();
+    to = site.email;
+  }
 
   const lines = [
     `Name:    ${s.name}`,

@@ -4,10 +4,10 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
-import { getSolution } from "@/data/solutions";
+import { getSolution } from "@/lib/content";
 
-export function FeaturedSolutions() {
-  const pos = getSolution("boj-pos");
+export async function FeaturedSolutions() {
+  const pos = await getSolution("boj-pos");
   if (!pos) return null;
 
   return (
