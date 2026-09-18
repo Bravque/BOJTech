@@ -38,10 +38,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 border-b bg-white/85 backdrop-blur-md transition-all duration-300",
         scrolled
-          ? "border-b border-ink-100 bg-white/85 backdrop-blur-md shadow-[0_1px_20px_rgba(13,21,38,0.06)]"
-          : "border-b border-transparent bg-transparent"
+          ? "border-ink-100 shadow-[0_1px_20px_rgba(13,21,38,0.06)]"
+          : "border-transparent"
       )}
     >
       <nav
