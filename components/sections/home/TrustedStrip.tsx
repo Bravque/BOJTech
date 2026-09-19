@@ -40,7 +40,7 @@ export async function TrustedStrip() {
                   return (
                     <div
                       key={client.id}
-                      className="flex h-16 items-center justify-center"
+                      className="flex h-16 items-center justify-center rounded-xl border border-ink-100 bg-white px-4 py-3 shadow-sm"
                     >
                       {client.url ? (
                         <Link
@@ -61,7 +61,7 @@ export async function TrustedStrip() {
               : placeholders.map((label, i) => (
                   <div
                     key={i}
-                    className="flex h-16 items-center justify-center gap-2 rounded-xl border border-dashed border-ink-200 text-ink-300 transition-colors hover:text-ink-400"
+                    className="flex h-16 items-center justify-center gap-2 rounded-xl border border-dashed border-ink-200 bg-white/60 text-ink-300 transition-colors hover:text-ink-400"
                     title="Client logo placeholder"
                   >
                     <Building2 className="h-5 w-5" strokeWidth={1.5} />
