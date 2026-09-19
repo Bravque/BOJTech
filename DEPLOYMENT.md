@@ -54,11 +54,17 @@ Then sign in at `/admin/login`.
 6. **Start command**: `npm run start` (Next.js server). Point the app's
    startup/entry at this. The server reads `PORT` from the environment.
 
-### Image uploads
-The admin image picker uploads to `public/uploads/` and files are served from
-there by `next start`. Ensure that directory is writable and persists across
-restarts on the host. (You can always paste an image path/URL instead of
-uploading.)
+### Image uploads (stored in the database)
+The managed Hostinger Node app runs on an **ephemeral filesystem** — files
+written at runtime (e.g. `public/uploads/`) are lost on every redeploy. So admin
+uploads are stored in the **`Media` table** (`app/api/admin/upload/route.ts`
+inserts the bytes) and served by **`app/api/media/[id]`**; content records
+reference them as `/api/media/<id>`. This survives redeploys because the DB
+persists. The `Media` table ships as a migration
+(`prisma/migrations/*_add_media`); apply it once like the initial schema
+(`prisma migrate deploy`, or pipe the migration SQL into the `mysql` client on
+hosts where the Prisma engine can't run). You can always paste an image
+path/URL instead of uploading.
 
 ## Local development
 

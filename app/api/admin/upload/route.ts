@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "node:fs/promises";
-import path from "node:path";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -41,11 +40,18 @@ export async function POST(req: Request) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 40) || "upload";
-  const filename = `${base}-${Date.now()}.${ext}`;
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, filename), bytes);
+  // Store in the DB so uploads survive redeploys on hosts with an ephemeral
+  // app filesystem. Served back by app/api/media/[id].
+  const media = await prisma.media.create({
+    data: {
+      filename: `${base}.${ext}`,
+      mimeType: file.type,
+      size: bytes.length,
+      data: bytes,
+    },
+    select: { id: true },
+  });
 
-  return NextResponse.json({ ok: true, path: `/uploads/${filename}` });
+  return NextResponse.json({ ok: true, path: `/api/media/${media.id}` });
 }

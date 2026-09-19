@@ -90,12 +90,15 @@ export function ImagePlaceholder({
 }: ImagePlaceholderProps) {
   const styles = toneStyles[tone];
   const isDark = tone === "dark";
-  // Admin-managed images (runtime uploads under /uploads, or pasted remote URLs)
-  // can't go through the Next image optimizer on the managed host — it rejects
-  // them with 400. Serve those directly; keep optimization for build-time assets.
+  // Admin-managed images (DB-served /api/media, legacy /uploads, or pasted
+  // remote URLs) can't go through the Next image optimizer on the managed host —
+  // it rejects them with 400. Serve those directly; keep optimization for
+  // build-time assets under /images.
   const unoptimized =
     typeof src === "string" &&
-    (src.startsWith("/uploads/") || /^https?:\/\//.test(src));
+    (src.startsWith("/uploads/") ||
+      src.startsWith("/api/media/") ||
+      /^https?:\/\//.test(src));
 
   return (
     <figure
