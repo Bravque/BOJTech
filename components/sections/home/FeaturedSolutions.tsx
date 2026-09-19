@@ -26,7 +26,7 @@ export async function FeaturedSolutions() {
               <Eyebrow tone="light">Featured solution</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl">
+              <h2 className="mt-5 text-3xl font-bold leading-tight text-white sm:text-4xl">
                 Run your business smarter with{" "}
                 <span className="text-gradient-light">BOJ POS</span>
               </h2>
