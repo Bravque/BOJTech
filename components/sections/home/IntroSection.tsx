@@ -21,6 +21,7 @@ export function IntroSection() {
             <div className="relative">
               <div className="rounded-[2rem] bg-white p-2.5 shadow-card ring-1 ring-ink-100">
                 <ImagePlaceholder
+                  src="/images/DSC_0228.JPG"
                   title="BOJ Technologies team at work"
                   description="Our team working on innovative technology solutions"
                   alt="BOJ Technologies team working on innovative technology solutions"
