@@ -90,6 +90,12 @@ export function ImagePlaceholder({
 }: ImagePlaceholderProps) {
   const styles = toneStyles[tone];
   const isDark = tone === "dark";
+  // Admin-managed images (runtime uploads under /uploads, or pasted remote URLs)
+  // can't go through the Next image optimizer on the managed host — it rejects
+  // them with 400. Serve those directly; keep optimization for build-time assets.
+  const unoptimized =
+    typeof src === "string" &&
+    (src.startsWith("/uploads/") || /^https?:\/\//.test(src));
 
   return (
     <figure
@@ -110,6 +116,7 @@ export function ImagePlaceholder({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
             className="object-cover"
             priority={priority}
+            unoptimized={unoptimized}
           />
           {overlayText && (
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/80 to-transparent p-5 text-sm font-medium text-white">
