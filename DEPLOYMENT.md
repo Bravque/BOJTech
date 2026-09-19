@@ -14,7 +14,7 @@ Copy `.env.example` to `.env` (local) or set these in the host's panel:
 | `DATABASE_URL` | MySQL connection string: `mysql://USER:PASSWORD@localhost:3306/DBNAME` |
 | `NEXTAUTH_SECRET` | Session signing secret. Generate: `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | Public site URL, e.g. `https://bojtechnologies.com` (use `http://localhost:3000` locally) |
-| `RESEND_API_KEY` / `CONTACT_FROM_EMAIL` / `CONTACT_TO_EMAIL` | Contact-form email delivery (optional; see main README) |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` / `CONTACT_FROM_EMAIL` / `CONTACT_TO_EMAIL` | Contact-form email delivery over SMTP (optional; see main README) |
 
 ## First-time setup (any environment)
 
@@ -42,7 +42,7 @@ Then sign in at `/admin/login`.
 2. **Create the Node.js app** — hPanel → **Websites → Add Website → Node.js App**
    (import the Git repo or upload the files). Pick a current Node.js LTS.
 3. **Set environment variables** in the app's config: `DATABASE_URL`,
-   `NEXTAUTH_SECRET`, `NEXTAUTH_URL` (your domain), plus the Resend vars if used.
+   `NEXTAUTH_SECRET`, `NEXTAUTH_URL` (your domain), plus the SMTP vars if used.
 4. **Install & build**: run `npm install` then `npm run build` (the build runs
    `prisma generate` automatically).
 5. **Apply the schema & seed** (one time, from the app's terminal/SSH):
