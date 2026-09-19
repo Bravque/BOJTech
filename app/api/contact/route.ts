@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 import { getSiteSettings } from "@/lib/content";
 
 export const runtime = "nodejs";
@@ -71,10 +72,10 @@ export async function POST(req: Request) {
   const delivered = await deliver(submission);
   if (!delivered) {
     // Not configured (or the provider failed) — log so an enquiry is never
-    // silently lost. Set RESEND_API_KEY + CONTACT_FROM_EMAIL to enable email
+    // silently lost. Set SMTP_HOST + SMTP_USER + SMTP_PASSWORD to enable email
     // delivery (see .env.example).
     console.warn(
-      "[contact] Email not delivered — provider not configured. Submission:",
+      "[contact] Email not delivered — SMTP not configured. Submission:",
       submission
     );
   }
@@ -83,16 +84,22 @@ export async function POST(req: Request) {
 }
 
 /**
- * Sends the enquiry via Resend's REST API (no SDK dependency required).
+ * Sends the enquiry over SMTP via Nodemailer (e.g. a Hostinger mailbox).
  * Returns false when email is not configured or delivery fails, so the caller
- * can fall back to logging. Swap this out for SMTP, a CRM or another provider
- * as needed — the route contract stays the same.
+ * can fall back to logging. Swap this out for an HTTP API, a CRM or another
+ * provider as needed — the route contract stays the same.
  */
 async function deliver(s: Submission): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.CONTACT_FROM_EMAIL;
+  const host = process.env.SMTP_HOST;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASSWORD;
 
-  if (!apiKey || !from) return false;
+  if (!host || !user || !pass) return false;
+
+  // Port 465 uses implicit TLS; 587 (and others) upgrade via STARTTLS.
+  const port = Number(process.env.SMTP_PORT) || 465;
+  // Most mailboxes require the From address to match the authenticated user.
+  const from = process.env.CONTACT_FROM_EMAIL || user;
 
   let to = process.env.CONTACT_TO_EMAIL;
   if (!to) {
@@ -111,21 +118,21 @@ async function deliver(s: Submission): Promise<boolean> {
   ].join("\n");
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        reply_to: s.email,
-        subject: `New enquiry — ${s.service || "General"} (${s.name})`,
-        text: lines,
-      }),
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: port === 465,
+      auth: { user, pass },
     });
-    return res.ok;
+
+    await transporter.sendMail({
+      from,
+      to,
+      replyTo: s.email,
+      subject: `New enquiry — ${s.service || "General"} (${s.name})`,
+      text: lines,
+    });
+    return true;
   } catch (err) {
     console.error("[contact] delivery error:", err);
     return false;
