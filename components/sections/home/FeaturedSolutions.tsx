@@ -65,6 +65,7 @@ export async function FeaturedSolutions() {
             <div className="relative">
               <div className="rounded-[2rem] bg-white/[0.04] p-2.5 ring-1 ring-inset ring-white/10 backdrop-blur">
                 <ImagePlaceholder
+                  src={pos.image}
                   title={pos.imagePlaceholder}
                   description="Sales, products, inventory, reports and analytics"
                   alt={pos.imageAlt}
