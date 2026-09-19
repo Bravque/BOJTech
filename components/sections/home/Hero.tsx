@@ -25,7 +25,7 @@ export function Hero() {
             <div className="animate-fade-up">
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700 shadow-soft ring-1 ring-inset ring-brand-100">
                 <Sparkles className="h-3.5 w-3.5 text-accent-500" />
-                Innovative ICT solutions · Migori, Kenya
+                Innovative ICT solutions in Kenya
               </span>
             </div>
 
