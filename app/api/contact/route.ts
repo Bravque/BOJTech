@@ -125,16 +125,39 @@ async function deliver(s: Submission): Promise<boolean> {
       auth: { user, pass },
     });
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from,
       to,
       replyTo: s.email,
       subject: `New enquiry — ${s.service || "General"} (${s.name})`,
       text: lines,
     });
+    // Log the SMTP server's actual response so a successful send is visible in
+    // the logs (accepted/rejected recipients + the server's reply line).
+    console.log("[contact] Email sent:", {
+      messageId: info.messageId,
+      accepted: info.accepted,
+      rejected: info.rejected,
+      response: info.response,
+    });
     return true;
   } catch (err) {
-    console.error("[contact] delivery error:", err);
+    // Log nodemailer's structured error fields (code/response) — far more
+    // useful than the raw object for diagnosing SMTP failures.
+    const e = err as {
+      message?: string;
+      code?: string;
+      command?: string;
+      response?: string;
+      responseCode?: number;
+    };
+    console.error("[contact] delivery error:", {
+      message: e?.message,
+      code: e?.code,
+      command: e?.command,
+      responseCode: e?.responseCode,
+      response: e?.response,
+    });
     return false;
   }
 }
