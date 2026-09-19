@@ -85,6 +85,7 @@ export function Hero() {
             {/* main dashboard mockup */}
             <div className="relative rounded-[2rem] bg-white p-2.5 shadow-glow ring-1 ring-ink-100">
               <ImagePlaceholder
+                src="/images/software-dashboard.jpeg"
                 title="Software dashboard & digital transformation"
                 description="Modern African technology, software development and connectivity"
                 alt="Modern technology team, software dashboard and digital network illustration"
