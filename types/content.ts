@@ -56,8 +56,6 @@ export type SiteSettings = {
   addressLines: string[];
   hours: BusinessHour[];
   socials: Social[];
-  heroImage: string;
-  introImage: string;
 };
 
 export const USER_ROLES = ["ADMIN", "EDITOR"] as const;

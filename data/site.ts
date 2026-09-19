@@ -35,8 +35,6 @@ export const site = {
     { days: "Saturday", time: "9:00 AM – 2:00 PM" },
     { days: "Sunday & Public Holidays", time: "Closed (Emergency support available)" },
   ],
-  heroImage: "",
-  introImage: "",
 };
 
 export const socials = [

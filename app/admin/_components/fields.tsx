@@ -239,17 +239,7 @@ export function IconPicker({ name, defaultValue }: { name: string; defaultValue?
 }
 
 /** Image path field with optional upload to /api/admin/upload. */
-export function ImageField({
-  name,
-  defaultValue,
-  label = "Image",
-  hint = "Upload a file or paste a path/URL. Leave blank to show the styled placeholder.",
-}: {
-  name: string;
-  defaultValue?: string;
-  label?: string;
-  hint?: string;
-}) {
+export function ImageField({ name, defaultValue }: { name: string; defaultValue?: string }) {
   const [value, setValue] = useState(defaultValue ?? "");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -274,7 +264,7 @@ export function ImageField({
   }
 
   return (
-    <Field label={label} htmlFor={name} hint={hint} error={error ?? undefined}>
+    <Field label="Image" htmlFor={name} hint="Upload a file or paste a path/URL. Leave blank to show the styled placeholder." error={error ?? undefined}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <input
           id={name}

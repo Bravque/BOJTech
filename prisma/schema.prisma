@@ -134,8 +134,6 @@ model SiteSetting {
   addressLines    Json // string[]
   hours           Json // { days: string; time: string }[]
   socials         Json // { label: string; href: string; icon: string }[]
-  heroImage       String   @default("") // home hero visual; "" = styled placeholder
-  introImage      String   @default("") // home "Who we are" visual; "" = styled placeholder
   updatedAt       DateTime @updatedAt
 }
 

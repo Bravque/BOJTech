@@ -225,7 +225,5 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     addressLines: (r.addressLines as string[]) ?? [],
     hours: (r.hours as SiteSettings["hours"]) ?? [],
     socials: (r.socials as Social[]) ?? [],
-    heroImage: r.heroImage ?? "",
-    introImage: r.introImage ?? "",
   };
 }
