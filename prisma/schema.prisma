@@ -146,3 +146,15 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+// Admin-uploaded images, stored in the DB so they survive redeploys on hosts
+// with an ephemeral app filesystem. Served by app/api/media/[id]. Content
+// records reference these as `/api/media/<id>` in their `image` field.
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  size      Int
+  data      Bytes    @db.LongBlob
+  createdAt DateTime @default(now())
+}
