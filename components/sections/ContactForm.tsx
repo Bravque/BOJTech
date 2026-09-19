@@ -8,23 +8,83 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 export type ContactFormService = { slug: string; name: string };
 
+// Mirrors the server-side rules in app/api/contact/route.ts so we can give
+// instant, field-specific feedback (name ≥ 2, valid email, message ≥ 10).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FIELD_MESSAGES: Record<string, string> = {
+  name: "Please enter your name.",
+  email: "Please enter a valid email address.",
+  message: "Please include a message of at least 10 characters.",
+};
+
+function validate(values: Record<string, string>): Record<string, string> {
+  const errs: Record<string, string> = {};
+  if ((values.name ?? "").trim().length < 2) errs.name = FIELD_MESSAGES.name;
+  if (!EMAIL_RE.test((values.email ?? "").trim())) errs.email = FIELD_MESSAGES.email;
+  if ((values.message ?? "").trim().length < 10) errs.message = FIELD_MESSAGES.message;
+  return errs;
+}
+
 const fieldBase =
-  "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-100";
+  "w-full rounded-xl border bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:outline-none focus:ring-4";
+const fieldOk = "border-ink-200 focus:border-brand-400 focus:ring-brand-100";
+const fieldBad = "border-red-400 focus:border-red-400 focus:ring-red-100";
 
 const labelBase = "mb-1.5 block text-sm font-medium text-ink-700";
 
 export function ContactForm({ services = [] }: { services?: ContactFormService[] }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const fieldClass = (name: string) =>
+    cn(fieldBase, fieldErrors[name] ? fieldBad : fieldOk);
+
+  // Accessibility helpers so screen readers announce the specific problem.
+  const invalidProps = (name: string) =>
+    fieldErrors[name]
+      ? ({ "aria-invalid": true, "aria-describedby": `${name}-error` } as const)
+      : {};
+
+  function clearFieldError(name: string) {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  }
+
+  function focusFirst(form: HTMLFormElement, errs: Record<string, string>) {
+    const first = Object.keys(errs)[0];
+    const el = form.elements.namedItem(first);
+    if (el instanceof HTMLElement) el.focus();
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    setStatus("submitting");
     setError(null);
+    setFieldErrors({});
+
+    const payload = Object.fromEntries(new FormData(form).entries()) as Record<
+      string,
+      string
+    >;
+
+    // Catch problems client-side first — no round trip, styled highlight.
+    const localErrors = validate(payload);
+    if (Object.keys(localErrors).length) {
+      setStatus("error");
+      setError("Please fix the highlighted fields below.");
+      setFieldErrors(localErrors);
+      focusFirst(form, localErrors);
+      return;
+    }
+
+    setStatus("submitting");
 
     try {
-      const payload = Object.fromEntries(new FormData(form).entries());
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,8 +93,22 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
 
       if (!res.ok) {
         const body = (await res.json().catch(() => null)) as
-          | { error?: string }
+          | { error?: string; fields?: string[] }
           | null;
+
+        // Server rejected specific fields — highlight them the same way.
+        if (body?.fields?.length) {
+          const errs: Record<string, string> = {};
+          for (const f of body.fields) {
+            errs[f] = FIELD_MESSAGES[f] ?? "Please check this field.";
+          }
+          setStatus("error");
+          setError("Please fix the highlighted fields below.");
+          setFieldErrors(errs);
+          focusFirst(form, errs);
+          return;
+        }
+
         throw new Error(body?.error ?? "Something went wrong. Please try again.");
       }
 
@@ -80,6 +154,7 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-8"
     >
       {/* Honeypot — hidden from humans; bots that fill it are silently dropped. */}
@@ -106,8 +181,15 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
             required
             autoComplete="name"
             placeholder="Your full name"
-            className={fieldBase}
+            className={fieldClass("name")}
+            onChange={() => clearFieldError("name")}
+            {...invalidProps("name")}
           />
+          {fieldErrors.name && (
+            <p id="name-error" className="mt-1.5 text-xs font-medium text-red-600">
+              {fieldErrors.name}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="email" className={labelBase}>
@@ -120,8 +202,15 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
             required
             autoComplete="email"
             placeholder="you@company.com"
-            className={fieldBase}
+            className={fieldClass("email")}
+            onChange={() => clearFieldError("email")}
+            {...invalidProps("email")}
           />
+          {fieldErrors.email && (
+            <p id="email-error" className="mt-1.5 text-xs font-medium text-red-600">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="phone" className={labelBase}>
@@ -133,7 +222,7 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
             type="tel"
             autoComplete="tel"
             placeholder="+254 7XX XXX XXX"
-            className={fieldBase}
+            className={fieldClass("phone")}
           />
         </div>
         <div>
@@ -146,14 +235,19 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
             type="text"
             autoComplete="organization"
             placeholder="Your organization"
-            className={fieldBase}
+            className={fieldClass("company")}
           />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="service" className={labelBase}>
             Service Required
           </label>
-          <select id="service" name="service" defaultValue="" className={cn(fieldBase, "appearance-none")}>
+          <select
+            id="service"
+            name="service"
+            defaultValue=""
+            className={cn(fieldClass("service"), "appearance-none")}
+          >
             <option value="" disabled>
               Select a service…
             </option>
@@ -175,8 +269,20 @@ export function ContactForm({ services = [] }: { services?: ContactFormService[]
             required
             rows={5}
             placeholder="Tell us about your project, goals or requirements…"
-            className={cn(fieldBase, "resize-y")}
+            className={cn(fieldClass("message"), "resize-y")}
+            onChange={() => clearFieldError("message")}
+            aria-describedby={fieldErrors.message ? "message-error" : "message-hint"}
+            aria-invalid={fieldErrors.message ? true : undefined}
           />
+          {fieldErrors.message ? (
+            <p id="message-error" className="mt-1.5 text-xs font-medium text-red-600">
+              {fieldErrors.message}
+            </p>
+          ) : (
+            <p id="message-hint" className="mt-1.5 text-xs text-ink-400">
+              Minimum 10 characters.
+            </p>
+          )}
         </div>
       </div>
 
