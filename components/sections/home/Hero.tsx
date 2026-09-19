@@ -122,7 +122,7 @@ export function Hero() {
               </span>
               <div>
                 <p className="text-xs font-semibold text-ink-900">WiFi Chap Chap</p>
-                <p className="text-[0.7rem] text-ink-500">Connected · 128 users</p>
+                <p className="text-[0.7rem] text-ink-500">Connected · 128+ users</p>
               </div>
             </div>
           </div>
