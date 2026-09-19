@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `SiteSetting`
+    ADD COLUMN `heroImage` VARCHAR(191) NOT NULL DEFAULT '',
+    ADD COLUMN `introImage` VARCHAR(191) NOT NULL DEFAULT '';

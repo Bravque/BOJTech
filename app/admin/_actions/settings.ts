@@ -24,6 +24,8 @@ const schema = z.object({
   phonePrimary: z.string().trim().min(1, "Primary phone is required."),
   phoneSecondary: z.string().trim(),
   location: z.string().trim().min(1, "Location is required."),
+  heroImage: z.string().trim(),
+  introImage: z.string().trim(),
 });
 
 export async function saveSettings(
@@ -45,6 +47,8 @@ export async function saveSettings(
     phonePrimary: String(formData.get("phonePrimary") ?? ""),
     phoneSecondary: String(formData.get("phoneSecondary") ?? ""),
     location: String(formData.get("location") ?? ""),
+    heroImage: String(formData.get("heroImage") ?? ""),
+    introImage: String(formData.get("introImage") ?? ""),
   });
   if (!parsed.success) {
     return { error: "Please fix the highlighted fields.", fieldErrors: fieldErrorsFromZod(parsed.error) };

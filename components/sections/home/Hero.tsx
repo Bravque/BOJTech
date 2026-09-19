@@ -3,9 +3,11 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { stats } from "@/data/site";
+import { getSiteSettings } from "@/lib/content";
 
-export function Hero() {
+export async function Hero() {
   const heroStats = stats.slice(0, 3);
+  const settings = await getSiteSettings();
 
   return (
     <section className="relative overflow-hidden bg-white pt-[calc(var(--header-height)+2.5rem)]">
@@ -85,6 +87,7 @@ export function Hero() {
             {/* main dashboard mockup */}
             <div className="relative rounded-[2rem] bg-white p-2.5 shadow-glow ring-1 ring-ink-100">
               <ImagePlaceholder
+                src={settings.heroImage || undefined}
                 title="Software dashboard & digital transformation"
                 description="Modern African technology, software development and connectivity"
                 alt="Modern technology team, software dashboard and digital network illustration"
