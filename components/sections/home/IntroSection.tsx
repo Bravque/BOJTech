@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
+import { getSiteSettings } from "@/lib/content";
 
 const points = [
   "One partner for software, digital, hardware and connectivity",
@@ -11,7 +12,8 @@ const points = [
   "End-to-end delivery — from strategy to support",
 ];
 
-export function IntroSection() {
+export async function IntroSection() {
+  const settings = await getSiteSettings();
   return (
     <section className="py-20 sm:py-24">
       <Container>
@@ -21,6 +23,7 @@ export function IntroSection() {
             <div className="relative">
               <div className="rounded-[2rem] bg-white p-2.5 shadow-card ring-1 ring-ink-100">
                 <ImagePlaceholder
+                  src={settings.introImage || undefined}
                   title="BOJ Technologies team at work"
                   description="Our team working on innovative technology solutions"
                   alt="BOJ Technologies team working on innovative technology solutions"

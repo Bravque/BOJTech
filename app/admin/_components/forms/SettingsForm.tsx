@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useFormState } from "react-dom";
 import { Plus, X } from "lucide-react";
-import { Field, TextInput, TextArea, ListEditor, SubmitButton, FormError } from "../fields";
+import { Field, TextInput, TextArea, ListEditor, ImageField, SubmitButton, FormError } from "../fields";
 import { saveSettings } from "@/app/admin/_actions/settings";
 import type { ActionState } from "@/app/admin/_actions/helpers";
 import type { SiteSettings } from "@/types/content";
@@ -194,6 +194,22 @@ export function SettingsForm({ settings, saved }: { settings: SiteSettings; save
 
       <div className="rounded-2xl border border-ink-100 p-4">
         <SocialsEditor defaultValue={settings.socials} />
+      </div>
+
+      <div className="space-y-5 rounded-2xl border border-ink-100 p-4">
+        <p className="text-sm font-semibold text-ink-900">Homepage images</p>
+        <ImageField
+          name="heroImage"
+          defaultValue={settings.heroImage}
+          label="Hero image"
+          hint="Main visual at the top of the home page. Leave blank to show the styled placeholder. Best around a 4:3 ratio."
+        />
+        <ImageField
+          name="introImage"
+          defaultValue={settings.introImage}
+          label="Intro / “Who we are” image"
+          hint="Visual in the “Who we are” section. Leave blank to show the styled placeholder. Best around a 4:3 ratio."
+        />
       </div>
 
       <div className="flex gap-3 pt-2">
