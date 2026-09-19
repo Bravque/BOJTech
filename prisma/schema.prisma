@@ -147,6 +147,17 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
+// Client logos shown in the "Trusted by" strip on the home page.
+model Client {
+  id        Int      @id @default(autoincrement())
+  name      String
+  logo      String? // /api/media/<id> or /images/...; null = hidden
+  url       String? // optional link to the client's site
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // Admin-uploaded images, stored in the DB so they survive redeploys on hosts
 // with an ephemeral app filesystem. Served by app/api/media/[id]. Content
 // records reference these as `/api/media/<id>` in their `image` field.

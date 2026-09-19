@@ -17,7 +17,30 @@ export type Stat = {
   shortLabel: string;
 };
 
+export type Client = {
+  id: number;
+  name: string;
+  logo?: string;
+  url?: string;
+};
+
 const byOrder = { orderBy: [{ order: "asc" as const }, { id: "asc" as const }] };
+
+export async function getClients(): Promise<Client[]> {
+  try {
+    const rows = await prisma.client.findMany(byOrder);
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      logo: r.logo ?? undefined,
+      url: r.url ?? undefined,
+    }));
+  } catch {
+    // Table may not exist yet (pre-migration) — show the placeholder strip.
+    return [];
+  }
+}
+
 
 export async function getServices(): Promise<Service[]> {
   const rows = await prisma.service.findMany(byOrder);

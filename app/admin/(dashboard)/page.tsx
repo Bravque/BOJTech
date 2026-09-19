@@ -7,6 +7,7 @@ import {
   Sparkles,
   BadgeCheck,
   BarChart3,
+  Handshake,
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -16,7 +17,7 @@ import { AdminHeader } from "@/app/admin/_components/ui";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
-  const [services, solutions, projects, industries, values, whyChoose, stats, users] =
+  const [services, solutions, projects, industries, values, whyChoose, stats, clients, users] =
     await Promise.all([
       prisma.service.count(),
       prisma.solution.count(),
@@ -25,6 +26,7 @@ export default async function AdminHome() {
       prisma.coreValue.count(),
       prisma.whyChoose.count(),
       prisma.stat.count(),
+      prisma.client.count(),
       prisma.user.count(),
     ]);
 
@@ -36,6 +38,7 @@ export default async function AdminHome() {
     { href: "/admin/values", label: "Core values", count: values, icon: Sparkles },
     { href: "/admin/why-choose", label: "Why-choose points", count: whyChoose, icon: BadgeCheck },
     { href: "/admin/stats", label: "Stats", count: stats, icon: BarChart3 },
+    { href: "/admin/clients", label: "Clients", count: clients, icon: Handshake },
     { href: "/admin/users", label: "Users", count: users, icon: Users },
   ];
 

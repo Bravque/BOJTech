@@ -11,6 +11,7 @@ import {
   Sparkles,
   BadgeCheck,
   BarChart3,
+  Handshake,
   Settings,
   Users,
 } from "lucide-react";
@@ -27,6 +28,7 @@ const links: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/admin/values", label: "Core Values", icon: Sparkles },
   { href: "/admin/why-choose", label: "Why Choose Us", icon: BadgeCheck },
   { href: "/admin/stats", label: "Stats", icon: BarChart3 },
+  { href: "/admin/clients", label: "Clients", icon: Handshake },
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
   { href: "/admin/users", label: "Users", icon: Users },
 ];
